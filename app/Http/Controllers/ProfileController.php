@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -18,7 +20,8 @@ class ProfileController extends Controller
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
-            'user' => $user
+            'success' => session('success'),
+            'user' => new UserResource($user)
         ]);
     }
 
@@ -35,7 +38,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return to_route('profile', $request->user())->with('success', 'Your profile details were updated.');
     }
 
     /**
@@ -58,4 +61,43 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function updateCover(Request $request)
+    {
+        $data = $request->validate([
+            'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048']
+        ]);
+
+        $cover = $data['cover'] ?? null;
+        $avatar = $data['avatar'] ?? null;
+        $user = $request->user();
+        $success = '';
+
+        if ($cover) {
+
+            if ($user->cover_path) {
+                Storage::disk('public')->delete($user->cover_path);
+            }
+
+            $path = $cover->store('covers/'.$user->id,'public');
+            $user->update(['cover_path' => $path]);
+            $success = 'Cover image updated';
+        }
+
+        if ($avatar) {
+            
+            if($user->avatar_path) {
+                Storage::disk('public')->delete($user->avatar_path);
+            }
+
+            $path = $avatar->store('avatars/'.$user->id, 'public');
+            $user->update(['avatar_path' => $path]);
+            $success = 'Avatar image updated';
+        }
+
+        return back()->with('success', $success);
+
+    }
+
 }
