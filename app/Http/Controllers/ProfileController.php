@@ -62,7 +62,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function updateCover(Request $request)
+    public function updateImages(Request $request)
     {
         $data = $request->validate([
             'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],

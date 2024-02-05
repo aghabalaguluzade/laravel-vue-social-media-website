@@ -1,15 +1,19 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-defineProps({
+const props = defineProps({
     modelValue: {
         type: String,
         required: true,
     },
-    placeholder: String
+    placeholder: String,
+    autoResize : {
+        type : Boolean,
+        default : false
+    }
 });
 
-defineEmits(['update:modelValue']);
+const emit =  defineEmits(['update:modelValue']);
 
 const input = ref(null);
 
@@ -20,13 +24,23 @@ onMounted(() => {
 });
 
 defineExpose({ focus: () => input.value.focus() });
+
+const onInputChange = ($event) => {
+	emit('update:modelValue', $event.target.value)
+
+    if (props.autoResize) {
+        input.value.style.height = 'auto';
+        input.value.style.height = input.value.scrollHeight + 'px';
+    }
+}
+
 </script>
 
 <template>
     <input
         class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
         :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="onInputChange"
         ref="input"
         :placeholder="placeholder"   
         />

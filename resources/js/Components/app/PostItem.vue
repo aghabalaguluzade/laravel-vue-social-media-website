@@ -1,18 +1,21 @@
 <script setup>
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
+
 defineProps({
     post: Object
 })
+
 function isImage(attachment) {
     const mime = attachment.mime.split('/')
     return mime[0].toLowerCase() === 'image'
 }
 </script>
+
 <template>
     <div class="bg-white border rounded p-4 mb-3">
         <div class="flex items-center gap-2 mb-3">
             <a href="javascript:void(0)">
-                <img :src="post.user.avatar"
+                <img :src="post.user.avatar_url"
                      class="w-[40px] rounded-full border-2 transition-all hover:border-blue-500"/>
             </a>
             <div>
@@ -28,15 +31,17 @@ function isImage(attachment) {
         </div>
         <div class="mb-3">
             <Disclosure v-slot="{ open }">
-                <div v-if="!open" v-html="post.body.substring(0, 200)"/>
-                <DisclosurePanel>
-                    <div v-html="post.body"/>
-                </DisclosurePanel>
-                <div class="flex justify-end">
-                    <DisclosureButton class="text-blue-500 hover:underline">
-                        {{ open ? 'Read less' : 'Read More' }}
-                    </DisclosureButton>
-                </div>
+                <div v-if="!open || post.body.length <= 200" v-html="post.body.substring(0, 200)"/>
+                <template v-if="post.body.length > 200">
+                    <DisclosurePanel>
+                        <div v-html="post.body"/>
+                    </DisclosurePanel>
+                    <div class="flex justify-end">
+                        <DisclosureButton class="text-blue-500 hover:underline">
+                            {{ open ? 'Read less' : 'Read More' }}
+                        </DisclosureButton>
+                    </div>
+                </template>
             </Disclosure>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
