@@ -2,7 +2,7 @@
 import {computed, ref} from 'vue'
 import { XMarkIcon, CheckCircleIcon, CameraIcon } from '@heroicons/vue/24/solid'
 import {TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/vue'
-import { usePage, useForm, router } from "@inertiajs/vue3";
+import { usePage, useForm, router, Head } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
@@ -49,7 +49,7 @@ const onCoverChange = (event) => {
 const onAvatarChange = (event) => {
     imagesForm.avatar = event.target.files[0];
     if(imagesForm.avatar) {
-        const reader = new new FileReader();
+        const reader = new FileReader();
         reader.onload = () => {
             avatarImageSrc.value = reader.result;
         }
@@ -92,6 +92,9 @@ const submitAvatarImage = () => {
 </script>
 
 <template>
+<Head>
+  <title>{{ user.name }}</title>
+</Head>
     <AuthenticatedLayout>
         <div class="max-w-[768px] mx-auto h-full overflow-auto">
             <div
