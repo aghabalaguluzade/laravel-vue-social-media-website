@@ -56,7 +56,9 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+        
+        return redirect()->back();
     }
 
     /**
@@ -64,6 +66,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if($post->user_id !== auth()->user()->id) {
+            return response("You don't permission to delete this post", 403);
+        }
+
+        $post->delete();
+        return back();
     }
 }
