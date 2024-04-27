@@ -11,6 +11,26 @@ import {
 import InputTextarea from "@/Components/InputTextarea.vue";
 import PostUserHeader from "@/Components/app/PostUserHeader.vue";
 import {useForm} from "@inertiajs/vue3";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+const editor = ClassicEditor;
+const editorConfig = {
+    toolbar: [
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            '|',
+            'link',
+            '|',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'outdent',
+            'indent',
+            '|',
+            'blockQuote',        ]
+};
 
 const props = defineProps({
     post: {
@@ -94,9 +114,8 @@ function submit(){
                                 </DialogTitle>
                                 <div class="p-4">
                                     <PostUserHeader :post="post" :show-time="false" class="mb-4"/>
-                                    <InputTextarea v-model="form.body" class="mb-3 w-full" />
+                                    <ckeditor :editor="editor" v-model="form.body" :config="editorConfig"></ckeditor>
                                 </div>
-
                                 <div class="py-3 px-4">
                                     <button
                                         type="button"
