@@ -2,8 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
+use App\Http\Resources\PostAttachmentResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
@@ -20,7 +21,7 @@ class PostResource extends JsonResource
             'body' => $this->body,
             'user' => new UserResource($this->user),
             'group_id' => $this->group_id,
-            'attachments' => $this->attachments,
+            'attachments' => PostAttachmentResource::collection($this->attachments),
             'created_at' => $this->created_at->format('y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('y-m-d H:i:s')
         ];
