@@ -11,7 +11,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $posts = Post::query()->latest()->paginate(20);
+        $userId = auth()->id();
+        $posts = Post::query()
+            ->withCount('reactions')
+            ->with(['reactions' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }])
+            ->latest()
+            ->paginate(20);
         
         return Inertia::render('Home', [
             'posts' => PostResource::collection($posts)

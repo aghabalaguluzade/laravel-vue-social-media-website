@@ -46,7 +46,6 @@ const attachmentExtensions = usePage().props.attachmentExtensions;
 const attachmentFiles = ref([])
 const attachmentErrors = ref([])
 const formErrors  = ref({})
-const showExtensionsText = ref(false)
 
 const form = useForm({
     body: '',
@@ -65,15 +64,15 @@ const computedAttachments = computed(() => {
 })
 
 const showExtensionsText = computed(() => {
-    for(let myFile of attachmentFiles.value) {
-        const file = myFile.value;
-        let parts = file.name.split('.');
-        let ext = parts.pop().toLowerCase();
-        if(!attachmentExtensions.includes(ext)) {
-            return true;
+    for (let myFile of attachmentFiles.value) {
+        const file = myFile.file
+        let parts = file.name.split('.')
+        let ext = parts.pop().toLowerCase()
+        if (!attachmentExtensions.includes(ext)) {
+            return true
         }
     }
-        return false;
+    return false;
 })
 
 const emit = defineEmits(['update:modelValue', 'hide'])
@@ -92,7 +91,6 @@ function resetModal() {
     form.reset()
     formErrors.value = {}
     attachmentFiles.value = []
-    showExtensionsText.value = false;
     attachmentErrors.value = [];
     if(props.post.attachments) {
         props.post.attachments.forEach(file => file.deleted = false);
