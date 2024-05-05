@@ -161,7 +161,10 @@ class PostController extends Controller
         ]);
 
         $userId = auth()->id();
-        $reaction = PostReaction::where('user_id', $userId)->where('post_id', $post->id)->first();
+        $reaction = PostReaction::where('user_id', $userId)
+            ->where('object_id', $post->id)
+            ->where('object_type', Post::class)
+            ->first();
 
         if ($reaction) {
             $hasReaction = false;
@@ -169,13 +172,16 @@ class PostController extends Controller
         } else {
             $hasReaction = true;
             PostReaction::create([
-                'post_id' => $post->id,
+                'object_id' => $post->id,
+                'object_type' => Post::class,
                 'user_id' => $userId,
                 'type' => $data['reaction']
             ]);
         }
 
-        $reactions = PostReaction::where('post_id', $post->id)->count();
+        $reactions = PostReaction::where('object_id', $post->id)
+            ->where('object_type', Post::class)
+            ->count();
 
         return response([
             'num_of_reactions' => $reactions,
@@ -216,5 +222,40 @@ class PostController extends Controller
         ]);
 
         return new CommentResource($comment);
+    }
+
+    public function commentReaction(Request $request, Comment $comment)
+    {
+        $data = $request->validate([
+            'reaction' => [Rule::enum(PostReactionEnum::class)]
+        ]);
+
+        $userId = auth()->id();
+        $reaction = PostReaction::where('user_id', $userId)
+            ->where('object_id', $comment->id)
+            ->where('object_type', Comment::class)
+            ->first();
+
+        if($reaction) {
+            $hasReaction = false;
+            $reaction->delete();
+        }else {
+            $hasReaction = true;
+            PostReaction::create([
+                'object_id' => $comment->id,
+                'object_type' => Comment::class,
+                'user_id' => $userId,
+                'type' => $data['reaction']
+            ]);
+        }
+
+        $reactions = PostReaction::where('object_id', $comment->id)
+            ->where('object_type', Comment::class)
+            ->count();
+
+        return response([
+            'num_of_reactions' => $reactions,
+            'current_user_has_reaction' => $hasReaction
+        ]);
     }
 }
