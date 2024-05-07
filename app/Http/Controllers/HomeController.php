@@ -9,7 +9,7 @@ use App\Http\Resources\PostResource;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $userId = auth()->id();
         $posts = Post::query()
@@ -23,10 +23,15 @@ class HomeController extends Controller
                 }
             ])
             ->latest()
-            ->paginate(20);
+            ->paginate(10);
         
+        $posts = PostResource::collection($posts);
+        if ($request->wantsJson()) {
+            return $posts;
+        }
+
         return Inertia::render('Home', [
-            'posts' => PostResource::collection($posts)
+            'posts' => $posts
         ]);
     }
 }
