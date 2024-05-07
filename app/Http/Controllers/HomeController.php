@@ -13,20 +13,15 @@ class HomeController extends Controller
     {
         $userId = auth()->id();
         $posts = Post::query()
-            ->withCount(['reactions', 'comments'])
+            ->withCount('reactions')
             ->with([
                 'reactions' => function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 },
                 'comments' => function ($query) use ($userId) {
-                    $query->whereNull('parent_id')
-                        ->withCount(['reactions', 'comments'])
-                        ->with([
-                            'reactions' => function ($query) use ($userId) {
-                                $query->where('user_id', $userId);
-                            }
-                        ]);
-                }])
+                    $query->withCount('reactions');
+                }
+            ])
             ->latest()
             ->paginate(20);
         
