@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/group', [GroupController::class, 'store'])->name('group.create');
     Route::post('/group/update-images/{group:slug}', [GroupController::class, 'updateImages'])->name('group.updateImages');
     Route::post('/group/invite/{group:slug}', [GroupController::class, 'inviteUsers'])->name('group.inviteUsers');
+    Route::post('/group/join/{group:slug}', [GroupController::class, 'join'])->name('group.join');
 });
 
 require __DIR__.'/auth.php';

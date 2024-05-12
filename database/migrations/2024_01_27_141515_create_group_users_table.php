@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('status', 25); // approved, pending
             $table->string('role',25); // admin, user
             $table->string('token',1024)->nullable();
-            $table->timestamp('token_expires_at')->nullable();
-            $table->timestamp('token_used_at')->nullable();
+            $table->timestamp('token_expire_date')->nullable();
+            $table->timestamp('token_used')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('group_id')->constrained('groups');
             $table->foreignId('created_by')->constrained('users');
