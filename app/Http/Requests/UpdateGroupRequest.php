@@ -11,7 +11,9 @@ class UpdateGroupRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $group = $this->route('group');
+
+        return $group->isAdmin(auth()->id());
     }
 
     /**
@@ -22,7 +24,9 @@ class UpdateGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'max:255'],
+            'auto_approval' => ['required', 'boolean'],
+            'about' => ['nullable']
         ];
     }
 }
