@@ -69,6 +69,7 @@ const resetAvatarImage = () => {
 
 const submitCoverImage = () => {
     imagesForm.post(route('profile.updateImages'), {
+        preserveScroll: true,
         onSuccess : (user) => {
             showNotification.value = true;
             resetCoverImage();
@@ -81,6 +82,7 @@ const submitCoverImage = () => {
 
 const submitAvatarImage = () => {
     imagesForm.post(route('profile.updateImages'), {
+        preserveScroll: true,
         onSuccess : (user) => {
             showNotification.value = true;
             resetAvatarImage();

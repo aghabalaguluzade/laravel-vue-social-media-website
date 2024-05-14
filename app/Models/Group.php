@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+
 class Group extends Model
 {
     use HasFactory;
@@ -36,10 +37,19 @@ class Group extends Model
 
     public function isAdmin($userId): bool
     {
-        return $this->currentUserGroup?->user_id == $userId;
+        return GroupUser::query()
+            ->where('user_id', $userId)
+            ->where('group_id', $this->id)
+            ->where('role', GroupUserRole::ADMIN->value)
+            ->exists();
     }
 
-    public function adminUser(): BelongsToMany
+    public function isOwner($userId): bool
+    {
+        return $this->user_id == $userId;
+    }
+
+    public function adminUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')->wherePivot('role', GroupUserRole::ADMIN->value);
     }

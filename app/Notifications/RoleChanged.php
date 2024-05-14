@@ -3,20 +3,19 @@
 namespace App\Notifications;
 
 use App\Models\Group;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RequestApproved extends Notification
+class RoleChanged extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Group $group, public User $user, public bool $approved)
+    public function __construct(public Group $group, public string $role)
     {
         //
     }
@@ -36,11 +35,8 @@ class RequestApproved extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $action = ($this->approved ? 'approved' : 'rejected');
-
-        return ( new MailMessage )
-            ->subject('Request was ' . $action)
-            ->line('Your request to join to group "' . $this->group->name . '" has been ' . $action)
+        return (new MailMessage)
+            ->line('Your role was changed into "'.$this->role.'" for group "'.$this->group->name.'".')
             ->action('Open Group', url(route('group.profile', $this->group)))
             ->line('Thank you for using our application!');
     }
