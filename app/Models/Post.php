@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\PostAttachment;
@@ -17,7 +18,7 @@ class Post extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['body', 'user_id'];
+    protected $fillable = ['body', 'user_id', 'group_id'];
 
 
     public function user(): BelongsTo
@@ -43,6 +44,21 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class)->latest();
+    }
+
+    public static function postsForTimeline($userId): Builder
+    {
+        return Post::query()
+            ->withCount('reactions')
+            ->with([
+                'comments' => function($query) {
+                    $query->withCount('reactions');
+                },
+                'reactions' => function($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                }
+            ])
+            ->latest();
     }
 
 }
