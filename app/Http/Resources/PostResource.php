@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\PostAttachmentResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'body' => $this->body,
             'user' => new UserResource($this->user),
-            'group_id' => $this->group_id,
+            'group' => new GroupResource($this->group),
             'attachments' => PostAttachmentResource::collection($this->attachments),
             'num_of_reactions' => $this->reactions_count,
             'current_user_has_reaction' => $this->reactions->count() > 0,
