@@ -11,10 +11,16 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\PostReaction;
+use App\Models\User;
+use App\Notifications\CommentCreated;
 use App\Notifications\CommentDeleted;
+use App\Notifications\PostCreated;
 use App\Notifications\PostDeleted;
+use App\Notifications\ReactionAddedOnComment;
+use App\Notifications\ReactionAddedOnPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -62,6 +68,15 @@ class PostController extends Controller
                 ]);
             }
             DB::commit();
+
+            $group = $post->group;
+
+            if($group) {
+                $users = $group->approvedUser()
+                    ->where('users.id', '!=', $user->id)
+                    ->get();
+                Notification::send($users, new PostCreated($group, $group));
+            }
         } catch (Exception $e) {
             foreach ($allFilePaths as $path) {
                 Storage::disk('public')->delete($path);
@@ -183,6 +198,11 @@ class PostController extends Controller
                 'user_id' => $userId,
                 'type' => $data['reaction']
             ]);
+
+            if(!$post->isOwner($userId)) {
+                $user = User::where('id', $userId)->first();
+                $post->user->notify(new ReactionAddedOnPost($post, $user));
+            }
         }
 
         $reactions = PostReaction::where('object_id', $post->id)
@@ -208,6 +228,9 @@ class PostController extends Controller
             'parent_id' => $data['parent_id'] ?: null,
             'comment' => nl2br($data['comment'])
         ]);
+
+        $post = $comment->post;
+        $post->user->notify(new CommentCreated($comment));
 
         return response(new CommentResource($comment), 201);
     }
@@ -260,6 +283,10 @@ class PostController extends Controller
                 'user_id' => $userId,
                 'type' => $data['reaction']
             ]);
+            if(!$comment->isOwner($userId)) {
+                $user = User::where('id', $userId)->first();
+                $comment->user->notify(new ReactionAddedOnComment($comment->post, $comment, $user));
+            }
         }
 
         $reactions = PostReaction::where('object_id', $comment->id)
