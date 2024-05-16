@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('post.destroy');
     Route::get('/post/download/{attachment}', [PostController::class, 'downloadAttachment'])->name('post.download');
     Route::post('/post/{post}/reaction', [PostController::class, 'postReaction'])->name('post.reaction');
+    Route::get('/post/{post}', [PostController::class, 'view'])->name('post.view');
 
     // Comments
     Route::post('/post/{post}/comment', [PostController::class, 'createComment'])->name('post.comment.create');
