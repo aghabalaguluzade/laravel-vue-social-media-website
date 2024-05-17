@@ -76,8 +76,12 @@ class PostController extends Controller
                 $users = $group->approvedUser()
                     ->where('users.id', '!=', $user->id)
                     ->get();
-                Notification::send($users, new PostCreated($group, $group));
+                Notification::send($users, new PostCreated($post, $user, $group));
             }
+
+            $followers = $user->followers;
+            Notification::send($followers, new PostCreated($post, $user, null));
+
         } catch (Exception $e) {
             foreach ($allFilePaths as $path) {
                 Storage::disk('public')->delete($path);
