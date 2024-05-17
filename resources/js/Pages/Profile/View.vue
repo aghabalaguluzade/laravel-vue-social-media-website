@@ -12,6 +12,8 @@ import CreatePost from "@/Components/app/CreatePost.vue";
 import PostList from "@/Components/app/PostList.vue";
 import UserListItem from "@/Components/app/UserListItem.vue";
 import TextInput from "@/Components/TextInput.vue";
+import PostAttachments from "@/Components/app/PostAttachments.vue";
+import TabPhotos from "@/Pages/Profile/TabPhotos.vue";
 
 const authUser = usePage().props.auth.user;
 const isMyProfile = computed(() => authUser && authUser.id === props.user.id)
@@ -44,7 +46,8 @@ const props = defineProps({
     },
     posts : Object,
     followers : Array,
-    followings : Array
+    followings : Array,
+    photos : Array
 });
 
 const onCoverChange = (event) => {
@@ -273,7 +276,7 @@ function followUser() {
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            Photos
+                            <TabPhotos :photos="photos" />
                         </TabPanel>
                         <TabPanel v-if="isMyProfile">
                             <Edit :must-verify-email="mustVerifyEmail" :status="status"/>

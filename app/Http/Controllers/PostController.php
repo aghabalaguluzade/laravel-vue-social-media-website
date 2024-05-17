@@ -73,7 +73,7 @@ class PostController extends Controller
             $group = $post->group;
 
             if($group) {
-                $users = $group->approvedUser()
+                $users = $group->approvedUsers()
                     ->where('users.id', '!=', $user->id)
                     ->get();
                 Notification::send($users, new PostCreated($post, $user, $group));
@@ -101,7 +101,7 @@ class PostController extends Controller
         $post->loadCount('reactions');
         $post->load([
             'comments' => function($query) {
-                $query->withCount('reactions')
+                $query->withCount('reactions');
             }
         ]);
 

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Resources\PostAttachmentResource;
 use App\Models\Follower;
 use App\Models\Post;
+use App\Models\PostAttachment;
 use App\Models\User;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
@@ -41,6 +43,12 @@ class ProfileController extends Controller
         $followers = $user->followers;
         $followings = $user->followings;
 
+        $photos = PostAttachment::query()
+            ->where('mime', 'like', 'image/%')
+            ->where('created_by', $user->id)
+            ->latest()
+            ->get();
+
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -50,7 +58,8 @@ class ProfileController extends Controller
             'user' => new UserResource($user),
             'posts' => $posts,
             'followers' => UserResource::collection($followers),
-            'followings' => UserResource::collection($followings)
+            'followings' => UserResource::collection($followings),
+            'photos' => PostAttachmentResource::collection($photos)
         ]);
     }
 
