@@ -52,7 +52,7 @@ class GroupController extends Controller
         }
 
         if($request->wantsJson()) {
-            return PostResource::collection($posts);
+            return $posts;
         }
 
         $group->load('currentUserGroup');
