@@ -7,6 +7,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Pages/Profile/Partials/TabItem.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const authUser = usePage().props.auth.user;
 const isMyProfile = computed(() => authUser && authUser.id === props.user.id)
@@ -30,6 +31,8 @@ const props = defineProps({
     success : {
         type : String
     },
+    isCurrentUserFollower: Boolean,
+    followerCount: Number,
     user: {
         type: Object
     }
@@ -90,6 +93,15 @@ const submitAvatarImage = () => {
                 showNotification.value = false;
             }, 3000);
         }
+    })
+}
+
+function followUser() {
+    const form = useForm({
+        follow : !props.isCurrentUserFollower
+    })
+    form.post(route('user.follow', props.user.id), {
+        preserveScroll : true
     })
 }
 
@@ -173,7 +185,19 @@ const submitAvatarImage = () => {
                         </div>
                     </div>
                     <div class="flex justify-between items-center flex-1 p-4">
-                        <h2 class="font-bold text-lg">{{ user.name }}</h2>
+                        <div>
+                            <h2 class="font-bold text-lg">{{ user.name }}</h2>
+                            <p class="text-xs text-gray-500">{{followerCount}} follower(s)</p>
+                        </div>
+
+                        <div>
+                            <PrimaryButton v-if="!isCurrentUserFollower" @click="followUser">
+                                Follow User
+                            </PrimaryButton>
+                            <DangerButton v-else @click="followUser">
+                                Unfollow User
+                            </DangerButton>
+                        </div>
                     </div>
                 </div>
             </div>

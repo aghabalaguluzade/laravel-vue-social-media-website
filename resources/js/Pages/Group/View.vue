@@ -277,7 +277,7 @@ function deleteUser(user) {
                         <Tab v-if="isJoinedToGroup" v-slot="{ selected }" as="template">
                             <TabItem text="Users" :selected="selected"/>
                         </Tab>
-                        <Tab v-if="isCurrentUserAdmin" v-slot="{ selected }" as="template">
+                        <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Pending Requests" :selected="selected"/>
                         </Tab>
                         <Tab v-slot="{ selected }" as="template">
@@ -331,10 +331,15 @@ function deleteUser(user) {
                             Photos
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
-                            <GroupForm :form="aboutForm" />
-                            <PrimaryButton @click="updateGroup">
-                                Submit
-                            </PrimaryButton>
+                            <template v-if="isCurrentUserAdmin">
+                                <GroupForm :form="aboutForm"/>
+                                <PrimaryButton @click="updateGroup">
+                                    Submit
+                                </PrimaryButton>
+                            </template>
+                            <div v-else v-html="group.about">
+
+                            </div>
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>

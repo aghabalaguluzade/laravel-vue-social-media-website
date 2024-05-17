@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Follower;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,10 +18,21 @@ class ProfileController extends Controller
 {
     public function index(User $user)
     {
+        $isCurrentUserFollower = false;
+        if(!auth()->guest()) {
+            $isCurrentUserFollower = Follower::where('user_id', $user->id)
+                ->where('follower_id', auth()->id())
+                ->exists();
+        }
+
+        $followerCount = Follower::where('user_id', $user->id)->count();
+
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
             'success' => session('success'),
+            'isCurrentUserFollower' => $isCurrentUserFollower,
+            'followerCount' => $followerCount,
             'user' => new UserResource($user)
         ]);
     }

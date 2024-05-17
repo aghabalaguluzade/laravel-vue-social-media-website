@@ -29,4 +29,12 @@ class UpdateGroupRequest extends FormRequest
             'about' => ['nullable']
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'about' => nl2br($this->about),
+        ]);
+    }
+
 }
