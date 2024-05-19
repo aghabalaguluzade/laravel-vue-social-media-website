@@ -7,7 +7,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 const props = defineProps({
     users: Array,
     groups: Array,
-    posts: Object
+    posts: Object,
+    search : String
 })
 
 </script>
@@ -15,7 +16,7 @@ const props = defineProps({
 <template>
     <AuthenticatedLayout>
         <div class="p-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div v-if="!search.startsWith('#')" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="shadow bg-white p-3 rounded mb-3">
                     <h2 class="text-lg font-bold">Users</h2>
                     <div class="grid-cols-2">
