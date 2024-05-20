@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/post/{post}', [PostController::class, 'view'])->name('post.view');
     Route::post('/post/ai-post', [PostController::class, 'aiPostContent'])->name('post.aiContent');
     Route::get('/search/{search?}', [SearchController::class, 'search'])->name('search');
+    Route::post('/fetch-url-preview', [PostController::class, 'fetchUrlPreview'])->name('post.fetchUrlPreview');
 
     // Comments
     Route::post('/post/{post}/comment', [PostController::class, 'createComment'])->name('post.comment.create');
