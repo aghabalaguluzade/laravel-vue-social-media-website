@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/post/{post}/reaction', [PostController::class, 'postReaction'])->name('post.reaction');
     Route::get('/post/{post}', [PostController::class, 'view'])->name('post.view');
     Route::post('/post/ai-post', [PostController::class, 'aiPostContent'])->name('post.aiContent');
+    Route::post('/{post}/pin', [PostController::class, 'pinUnpin'])->name('post.pinUnpin');
     Route::get('/search/{search?}', [SearchController::class, 'search'])->name('search');
     Route::post('/fetch-url-preview', [PostController::class, 'fetchUrlPreview'])->name('post.fetchUrlPreview');
 
