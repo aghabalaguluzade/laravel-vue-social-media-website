@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('auto_approval')->default(true);
             $table->text('about')->nullable();
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('pinned_post_id')->nullable()->constrained('posts');
             $table->timestamp('deleted_at')->nullable();
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
