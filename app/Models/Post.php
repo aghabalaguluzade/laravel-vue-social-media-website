@@ -18,8 +18,11 @@ class Post extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['body', 'user_id', 'group_id'];
+    protected $fillable = ['body', 'user_id', 'group_id', 'preview', 'preview_url'];
 
+    protected $casts = [
+        'preview' => 'json'
+    ];
 
     public function user(): BelongsTo
     {
@@ -51,8 +54,16 @@ class Post extends Model
         return Post::query()
             ->withCount('reactions')
             ->with([
+                'user',
+                'group',
+                'group.currentUserGroup',
+                'attachments',
                 'comments' => function($query) {
                     $query->withCount('reactions');
+                },
+                'comments.user',
+                'comments.reactions' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
                 },
                 'reactions' => function($query) use ($userId) {
                     $query->where('user_id', $userId);

@@ -23,6 +23,8 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'body' => $this->body,
+            'preview' => $this->preview,
+            'preview_url' => $this->preview_url,
             'user' => new UserResource($this->user),
             'group' => new GroupResource($this->group),
             'attachments' => PostAttachmentResource::collection($this->attachments),

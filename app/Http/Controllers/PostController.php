@@ -333,4 +333,32 @@ class PostController extends Controller
         ]);
     }
 
+    public function fetchUrlPreview(Request $request)
+    {
+        $data = $request->validate([
+            'url' => 'url'
+        ]);
+        $url = $data['url'];
+
+        $html = file_get_contents($url);
+
+        $dom = new \DOMDocument();
+
+        libxml_use_internal_errors(true);
+
+        $dom->loadHTML($html);
+
+        libxml_use_internal_errors(false);
+
+        $ogTags = [];
+        $metaTags = $dom->getElementsByTagName('meta');
+        foreach ($metaTags as $tag) {
+            $property = $tag->getAttribute('property');
+            if (str_starts_with($property, 'og:')) {
+                $ogTags[$property] = $tag->getAttribute('content');
+            }
+        }
+        return $ogTags;
+    }
+
 }

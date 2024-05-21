@@ -16,6 +16,8 @@ return new class extends Migration
             $table->longText('body')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('group_id')->nullable()->constrained('groups');
+            $table->json('preview')->nullable();
+            $table->string('preview_url', 2000)->nullable();
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();

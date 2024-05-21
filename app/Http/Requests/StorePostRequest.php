@@ -34,6 +34,8 @@ class StorePostRequest extends FormRequest
     {
         return [
             'body' => ['nullable', 'string'],
+            'preview' => ['nullable', 'array'],
+            'preview_url' => ['nullable', 'string'],
             'attachments' => [
                 'array',
                 'max:50',
@@ -64,9 +66,16 @@ class StorePostRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        $body = $this->input('body') ?: '';
+        $previewUrl = $this->input('preview_url') ?: '';
+        $trimedBody = trim(strip_tags($body));
+        if($trimedBody === $previewUrl) {
+            $body = '';
+        }
+
         $this->merge([
             'user_id' => auth()->user()->id,
-            'body' => $this->input('body') ?: ''
+            'body' => $body
         ]);
     }
 
