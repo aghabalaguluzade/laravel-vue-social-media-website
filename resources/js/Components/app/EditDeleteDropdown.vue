@@ -45,8 +45,8 @@ const pinAllowed = computed(() => {
 })
 
 const isPinned = computed(() => {
-    if(group?.id) {
-        return group?.pinned_post_id == props.post.id
+    if (group?.id) {
+        return group?.pinned_post_id === props.post.id
     }
     return authUser?.pinned_post_id === props.post.id
 })

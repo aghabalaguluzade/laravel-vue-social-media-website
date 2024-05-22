@@ -138,7 +138,7 @@ function followUser() {
                 >
                     {{ errors.cover }}
                 </div>
-                <div class="group relative bg-white">
+                <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
                     <img :src="coverImageSrc || user.cover_url || '/img/default_cover.jpg'"
                          class="w-full h-[200px] object-cover">
                     <div class="absolute top-2 right-2 ">
@@ -203,7 +203,7 @@ function followUser() {
                                 <h2 class="font-bold text-lg">{{ user.name }}</h2>
                                 <p class="text-xs text-gray-500">{{ followerCount }} follower(s)</p>
                             </div>
-                            <div v-if="authUser.id !== user.id">
+                            <div v-if="!isMyProfile">
                                 <PrimaryButton v-if="!isCurrentUserFollower" @click="followUser">
                                     Follow User
                                 </PrimaryButton>
@@ -215,9 +215,9 @@ function followUser() {
                     </div>
                 </div>
             </div>
-            <div class="border-t p-4 pt-0">
+            <div class="border-t m-4 mt-0">
                 <TabGroup>
-                    <TabList class="flex bg-white">
+                    <TabList class="flex bg-white dark:bg-slate-950 dark:text-white">
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected"/>
                         </Tab>

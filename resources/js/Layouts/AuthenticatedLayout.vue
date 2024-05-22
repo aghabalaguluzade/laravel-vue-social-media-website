@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { usePage, Link, router } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import TextInput from "@/Components/TextInput.vue";
+import { MoonIcon } from '@heroicons/vue/24/solid'
 
 const showingNavigationDropdown = ref(false);
 const keywords = ref(usePage().props.search || '');
@@ -15,15 +16,26 @@ function search() {
     router.get(route('search', encodeURIComponent(keywords.value)));
 }
 
+function toggleDarkMode() {
+    const html = window.document.documentElement
+    if (html.classList.contains('dark')) {
+        html.classList.remove('dark')
+        localStorage.setItem('darkMode', '0')
+    } else {
+        html.classList.add('dark')
+        localStorage.setItem('darkMode', '1')
+    }
+}
+
 </script>
 
 <template>
-    <div class="h-full overflow-hidden flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div class="h-full overflow-hidden flex flex-col bg-gray-100 dark:bg-gray-800">
         <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
             <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <div class="flex">
+                <div class="flex items-center justify-between gap-2 h-16">
+                    <div class="flex mr-2">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
                             <Link :href="route('home')">
@@ -33,9 +45,12 @@ function search() {
 
                     </div>
 
-                    <div class="flex-1">
+                    <div class="flex items-center gap-3 flex-1">
                         <TextInput v-model="keywords" placeholder="Search on the website" class="w-full"
                                    @keyup.enter="search"/>
+                        <button @click="toggleDarkMode" class="dark:text-white">
+                            <MoonIcon class="w-5 h-5"/>
+                        </button>
                     </div>
                     <div class="hidden sm:flex sm:items-center">
                         <!-- Settings Dropdown -->
@@ -66,7 +81,7 @@ function search() {
                                 </template>
                             </Dropdown>
                             <div v-else>
-                                <Link :href="route('login')">
+                                <Link :href="route('login')" class="dark:text-gray-100>
                                     Login
                                 </Link>
                             </div>

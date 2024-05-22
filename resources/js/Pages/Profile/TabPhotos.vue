@@ -40,7 +40,7 @@ function openPhoto(index) {
         </template>
     </div>
 
-    <div v-if="!photos.length" class="py-8 text-center text-gray-600">
+    <div v-if="!photos.length" class="py-8 text-center text-gray-600 dark:text-gray-100">
         There are no photos
     </div>
 

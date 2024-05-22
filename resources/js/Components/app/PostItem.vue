@@ -10,10 +10,7 @@ import PostAttachments from "@/Components/app/PostAttachments.vue";
 import CommentList from "@/Components/app/CommentList.vue";
 import { computed } from "vue";
 import UrlPreview from "@/Components/app/UrlPreview.vue";
-<<<<<<< HEAD
-=======
-import {MapPinIcon} from "@heroicons/vue/24/outline/index.js";
->>>>>>> f9099e2e950981e082f2a4d5bb7313c3276cdf10
+import { MapPinIcon } from "@heroicons/vue/24/outline/index.js";
 
 const props = defineProps({
     post: Object
@@ -34,11 +31,9 @@ const postBody = computed(() => {
     )
     return content;
 })
-<<<<<<< HEAD
-=======
 
 const isPinned = computed(() => {
-    if(group?.id) {
+    if (group?.id) {
         return group?.pinned_post_id === props.post.id
     }
     return authUser?.pinned_post_id === props.post.id
@@ -46,26 +41,25 @@ const isPinned = computed(() => {
 
 function pinUnpinPost() {
     const form = useForm({
-        forGroup : group?.id
+        forGroup: group?.id
     })
-    let isPinned = false
-    if(group?.id) {
-        isPinned = group?.pinned_post_id === props.post.id
-    }else {
-        isPinned = authUser?.pinned_post_id === props.post.id
+    let isPinned = false;
+    if (group?.id) {
+        isPinned = group?.pinned_post_id === props.post.id;
+    } else {
+        isPinned = authUser?.pinned_post_id === props.post.id;
     }
     form.post(route('post.pinUnpin', props.post.id), {
-        preserveScroll : true,
+        preserveScroll: true,
         onSuccess: () => {
-            if(group?.id) {
-                group.pinned_post_id = isPinned ? null : props.post.id;
-            }else {
-                authUser.pinned_post_id = isPinned ? null : props.post.id;
+            if (group?.id) {
+                group.pinned_post_id = isPinned ? null : props.post.id
+            } else {
+                authUser.pinned_post_id = isPinned ? null : props.post.id
             }
         }
     })
 }
->>>>>>> f9099e2e950981e082f2a4d5bb7313c3276cdf10
 
 function openEditModal() {
     emit('editClick', props.post);
@@ -96,7 +90,7 @@ function sendReaction() {
 </script>
 
 <template>
-    <div class="bg-white border rounded p-4 mb-3">
+    <div class="bg-white border dark:bg-slate-950 dark:border-slate-900 dark:text-gray-100 rounded p-4 mb-3">
         <div class="flex items-center justify-between mb-3">
             <PostUserHeader :post="post"/>
             <div class="flex items-center gap-2">
@@ -124,11 +118,11 @@ function sendReaction() {
             <div class="flex gap-2">
                 <button
                     @click="sendReaction"
-                    class="text-gray-800 flex gap-1 items-center justify-center  rounded-lg py-2 px-4 flex-1"
+                    class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center  rounded-lg py-2 px-4 flex-1"
                     :class="[
                     post.current_user_has_reaction ?
-                     'bg-red-300 hover:bg-red-500 hover:text-white' :
-                     'bg-green-300  hover:bg-green-500 hover:text-white'
+                     'bg-sky-100 dark:bg-sky-900 hover:bg-sky-200 dark:hover:bg-sky-950' :
+                     'bg-gray-100 dark:bg-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800 '
                 ]"
             >
                 <HandThumbUpIcon class="w-5 h-5"/>
@@ -136,7 +130,7 @@ function sendReaction() {
                     {{ post.current_user_has_reaction ? 'Dislike' : 'Like' }}
                 </button>
                 <DisclosureButton
-                    class="text-gray-800 flex gap-1 items-center justify-center bg-gray-100 rounded-lg hover:bg-gray-200 py-2 px-4 flex-1"
+                    class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center bg-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 rounded-lg hover:bg-gray-200 py-2 px-4 flex-1"
                 >
                     <ChatBubbleLeftRightIcon class="w-5 h-5"/>
                     <span class="mr-2">{{ post.num_of_comments }}</span>
