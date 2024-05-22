@@ -299,7 +299,7 @@ function deleteUser(user) {
                                     There are no posts in this group. Be the first and create it.
                                 </div>
                             </template>
-                            <div v-else class="py-8 text-center">
+                            <div v-else class="py-8 text-center dark:text-gray-100">
                                 You don't have permission to view these posts.
                             </div>
                         </TabPanel>
@@ -342,8 +342,7 @@ function deleteUser(user) {
                                     Submit
                                 </PrimaryButton>
                             </template>
-                            <div v-else class="ck-content-output" v-html="group.about">
-
+                            <div v-else class="ck-content-output dark:text-gray-100" v-html="group.about">
                             </div>
                         </TabPanel>
                     </TabPanels>
