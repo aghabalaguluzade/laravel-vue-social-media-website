@@ -31,7 +31,7 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified']);
 
 // Home
-Route::get('/', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // User
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])->name('profile');
